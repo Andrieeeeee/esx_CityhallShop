@@ -116,51 +116,6 @@ function OpenBuyDialogMenu(itemName, BuyPrice)
 	end)
 end
 
--- Function for Cityhall Shop Sell Menu:
-function CityhallShopSellMenu()
-	local player = PlayerPedId()
-	FreezeEntityPosition(player,true)
-	local elements = {}
-			
-	for k,v in pairs(Config.ItemsInCityhallShop) do
-		if v.SellInCityhallShop == true then
-			table.insert(elements,{label = v.label .. " | "..('<span style="color:green;">%s</span>'):format("$"..v.SellPrice..""), itemName = v.itemName, SellInCityhallShop = v.SellInCityhallShop, SellPrice = v.SellPrice})
-		end
-	end
-		
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), "esx_CityhallShop_sell_menu",
-		{
-			title    = "What do you want to sell?",
-			align    = "top-left",
-			elements = elements
-		},
-	function(data, menu)
-			if data.current.itemName == data.current.itemName then
-				OpenSellDialogMenu(data.current.itemName,data.current.SellPrice)
-			end	
-	end, function(data, menu)
-		menu.close()
-		insideMarker = false
-		FreezeEntityPosition(player,false)
-	end, function(data, menu)
-	end)
-end
-
--- Function for Cityhall Shop Sell Dialog
-function OpenSellDialogMenu(itemName, SellPrice)
-	ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'esx_CityhallShop_amount_to_sell_dialog', {
-		title = "Amount to Sell?"
-	}, function(data, menu)
-		menu.close()
-		amountToSell = tonumber(data.value)
-		totalSellPrice = (SellPrice * amountToSell)
-		TriggerServerEvent("esx_CityhallShop:SellItem",amountToSell,totalSellPrice,itemName)
-	end,
-	function(data, menu)
-		menu.close()	
-	end)
-end
-
 -- Blip on Map for Cityhall Shops:
 Citizen.CreateThread(function()
 	if Config.EnableCityhallShopBlip == true then	
